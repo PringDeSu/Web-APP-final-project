@@ -9,11 +9,17 @@ const port = 9487;
 
 // Configure CORS
 app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
+  origin: ['http://localhost:3000', 'http://localhost:5173'], // 允許來自 port 3000 和 port 5173 的請求
+  methods: ['GET', 'POST'], // GET 方法是播放器請求檔案時會用到的
+  allowedHeaders: ['Content-Type'], // POST 上傳時可能需要 Content-Type
 }));
 app.use(express.json());
+
+// --- Serve uploaded files ---
+// 將 'uploads' 目錄下的文件，透過 '/uploads' 這個 URL 路徑提供出去
+// 例如，如果檔案儲存為 '1678888888888.mp3'
+// 前端就可以透過 'http://localhost:9487/uploads/1678888888888.mp3' 來訪問
+app.use('/uploads', express.static('uploads'));
 
 // --- MP3 Upload Logic ---
 const storage = multer.diskStorage({
@@ -40,24 +46,70 @@ if (!fs.existsSync('uploads')) {
 app.post('/api/upload', (req, res, next) => {
   upload.single('mp3File')(req, res, (err) => {
     if (err instanceof multer.MulterError) {
+      console.error('Multer error:', err); // 記錄錯誤
       return res.status(500).json({ message: 'Multer error', error: err.message });
     } else if (err) {
+      console.error('Upload failed:', err); // 記錄錯誤
       return res.status(500).json({ message: 'Upload failed', error: err.message });
     }
     if (!req.file) {
       return res.status(400).json({ message: 'No file selected' });
     }
-    res.status(200).json({ message: 'File uploaded successfully', filename: req.file.filename });
+
+    // 檔案上傳成功後，回傳完整的 URL 路徑給前端
+    const fileUrl = `http://localhost:${port}/uploads/${req.file.filename}`;
+    res.status(200).json({
+      message: 'File uploaded successfully',
+      filename: req.file.filename,
+      url: fileUrl // 回傳完整的檔案 URL
+    });
   });
 });
 
+
+// --- API to get the latest uploaded MP3 URL ---
+app.get('/api/latest_upload_url', (req, res) => {
+  const uploadsDir = path.join(__dirname, 'uploads'); // 確保路徑正確
+
+  fs.readdir(uploadsDir, (err, files) => {
+    if (err) {
+      console.error('Error reading uploads directory:', err);
+      return res.status(500).json({ message: '無法讀取上傳檔案目錄', error: err.message });
+    }
+
+    // 過濾出 mp3 檔案 (可以根據需要添加其他音頻格式)
+    const mp3Files = files.filter(file => file.toLowerCase().endsWith('.mp3'));
+
+    if (mp3Files.length === 0) {
+      return res.status(404).json({ message: '目前沒有上傳的 MP3 檔案' });
+    }
+
+    // 找到最新修改的檔案 (通常是最新上傳的)
+    const latestFile = mp3Files.reduce((latest, file) => {
+      const filePath = path.join(uploadsDir, file);
+      const fileStats = fs.statSync(filePath); // 同步獲取檔案狀態，簡單起見
+      if (!latest || fileStats.mtimeMs > latest.mtimeMs) {
+        return { name: file, mtimeMs: fileStats.mtimeMs };
+      }
+      return latest;
+    }, null);
+
+    if (!latestFile) {
+         return res.status(404).json({ message: '無法找到最新的 MP3 檔案' });
+    }
+
+    // 回傳完整的檔案 URL
+    const fileUrl = `http://localhost:${port}/uploads/${latestFile.name}`; // 使用後端的 port
+    res.json({ url: fileUrl, filename: latestFile.name });
+  });
+});
 // --- Game of Life Logic ---
+// ... (這部分不變，省略) ...
 const WIDTH = 50;
 const HEIGHT = 50;
 let grid = Array(HEIGHT).fill().map(() => Array(WIDTH).fill(0));
 let generation = 0;
 
-// Initialize grid with random live cells
 function initializeGrid() {
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
@@ -66,7 +118,6 @@ function initializeGrid() {
   }
 }
 
-// Count live neighbors
 function countNeighbors(x, y) {
   let count = 0;
   for (let dy = -1; dy <= 1; dy++) {
@@ -80,7 +131,6 @@ function countNeighbors(x, y) {
   return count;
 }
 
-// Update grid for next generation
 function updateGrid() {
   const newGrid = Array(HEIGHT).fill().map(() => Array(WIDTH).fill(0));
   for (let y = 0; y < HEIGHT; y++) {
@@ -97,7 +147,6 @@ function updateGrid() {
   generation++;
 }
 
-// Find clusters using flood-fill
 function findClusters() {
   const visited = Array(HEIGHT).fill().map(() => Array(WIDTH).fill(false));
   const clusters = [];
@@ -127,7 +176,6 @@ function findClusters() {
   return clusters;
 }
 
-// Game of Life API endpoint
 app.get('/api/game', (req, res) => {
   updateGrid();
   const clusters = findClusters();
@@ -143,11 +191,16 @@ app.get('/api/game', (req, res) => {
 // Initialize game
 initializeGrid();
 
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Server error:', err);
-  res.status(500).json({ message: 'Internal server error', error: err.message });
+  // 避免在生產環境暴露詳細錯誤訊息
+  const statusCode = err.status || 500;
+  const message = statusCode === 500 ? 'Internal server error' : err.message || 'Something went wrong';
+  res.status(statusCode).json({ message, error: process.env.NODE_ENV === 'development' ? err.message : undefined });
 });
+
 
 // Start server
 app.listen(port, () => {
