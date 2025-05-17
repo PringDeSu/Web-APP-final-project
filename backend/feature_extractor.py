@@ -63,7 +63,7 @@ def get_chords(file_path, fps, sz):
 			ptr += 1
 		now_chord = chords[ptr].chord.split('/')[0]
 		if now_chord == 'N':
-			ret.append(-1)
+			ret.append(1)
 		else:
 			number = 0
 			now_chord = now_chord.split('/')[0]
