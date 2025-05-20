@@ -5,15 +5,16 @@ import math
 import os
 from flask import jsonify
 from chord_extractor.extractors import Chordino
+import subprocess
 
 
 n_fft=2048
 sr = 22050
 frame_time = n_fft/sr
 
-def change_file_to_wav(file_path):
-	os.system(f"ffmpeg -i {file_path} {file_path}.wav")
-	return f"{file_path}.wav"
+def change_file_to_wav(file_path, target_dir):
+	result = subprocess.check_output(['./trim_sound.sh', f"{file_path}", f"{target_dir}"], text=True)
+	return str(result).replace('\n', '').replace('\r', '')
 
 def get_amplitudes(file_path):
 	global sr, n_fft
@@ -82,9 +83,9 @@ def get_chords(file_path, fps, sz):
 		# ret.append(now_chord)
 	return ret
 
-def extract_from_file(file_path): #returns a json file with features
+def extract_from_file(file_path, target_dir): #returns a json file with features
 	global sr, n_fft
-	file_path = change_file_to_wav(file_path)
+	file_path = change_file_to_wav(file_path, target_dir)
 	print(f"wav file: {file_path}")
 	fps = n_fft/sr
 
@@ -92,9 +93,9 @@ def extract_from_file(file_path): #returns a json file with features
 	highest_frequencies = get_highest_frequencies(file_path)
 	chords = get_chords(file_path, fps, len(amplitudes))
 
-	return {
+	return ({
 		'sample_rate': fps,
 		'highest_frequency': highest_frequencies,
 		'amplitude': amplitudes,
 		'chord': chords
-	}
+	}, file_path)

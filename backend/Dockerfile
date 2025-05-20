@@ -6,6 +6,7 @@ WORKDIR /app
 COPY requirements.txt .
 COPY api.py .
 COPY feature_extractor.py .
+COPY trim_sound.sh .
 
 RUN apt-get update && apt-get install -y \
     "g++" libsndfile1 timidity ffmpeg \

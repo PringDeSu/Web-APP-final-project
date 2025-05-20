@@ -14,6 +14,7 @@ import feature_extractor
 parser = argparse.ArgumentParser()
 parser.add_argument('--tmp-folder', type=str, default='./files')
 parser.add_argument('--log-folder', type=str, default='./log')
+parser.add_argument('--output-folder', type=str, default='./output')
 parser.add_argument('--port',		type=int, default='3000')
 
 args = parser.parse_args()
@@ -39,6 +40,10 @@ UPLOAD_FOLDER = args.tmp_folder
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+DOWNLOAD_FOLDER = args.output_folder
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+
 @app.route('/api/post', methods=['POST'])
 def upload_file():
 	if 'file' not in request.files:
@@ -62,7 +67,7 @@ def upload_file():
 	app.logger.info(f"Saved in: {file_path}")
 
 	# parsing the file
-	features = feature_extractor.extract_from_file(file_path)
+	features, stored_path = feature_extractor.extract_from_file(file_path, app.config['DOWNLOAD_FOLDER'])
 
 	# return the attributes you parsed
 	# modify this part
@@ -70,8 +75,8 @@ def upload_file():
 		'message': 'File uploaded successfully',
 		'fileInfo': {
 			'originalName': file.filename,
-			'storedName': unique_filename,
-			'path': file_path
+			'convertedPath': stored_path,
+			'originalPath': file_path
 		},
 		'features': features
 	})
