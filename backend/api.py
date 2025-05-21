@@ -15,6 +15,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--tmp-folder', type=str, default='./files')
 parser.add_argument('--log-folder', type=str, default='./log')
 parser.add_argument('--output-folder', type=str, default='./output')
+parser.add_argument('--cache-folder', type=str, default='./cache')
 parser.add_argument('--port',		type=int, default='3000')
 
 args = parser.parse_args()
@@ -43,6 +44,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 OUTPUT_FOLDER = args.output_folder
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
+
+CACHE_FOLDER = args.cache_folder
+os.makedirs(CACHE_FOLDER, exist_ok=True)
+app.config['CACHE_FOLDER'] = CACHE_FOLDER
 
 @app.route('/api/upload/<path:filename>')
 def serve_file(filename):
@@ -76,7 +81,7 @@ def upload_file():
 	app.logger.info(f"Saved in: {file_path}")
 
 	# parsing the file
-	features, stored_name = feature_extractor.extract_from_file(file_path, app.config['OUTPUT_FOLDER'])
+	features, stored_name = feature_extractor.extract_from_file(file_path, app.config['OUTPUT_FOLDER'], app.config['CACHE_FOLDER'])
 
 	# return the attributes you parsed
 	# modify this part

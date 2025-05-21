@@ -3,9 +3,10 @@ import librosa
 import numpy as np
 import math
 import os
-from flask import jsonify
+from flask import jsonify, current_app
 from chord_extractor.extractors import Chordino
 import subprocess
+import json
 
 
 n_fft=2048
@@ -83,20 +84,29 @@ def get_chords(file_path, fps, sz):
         # ret.append(now_chord)
     return ret
 
-def extract_from_file(file_path, target_dir): #returns a json file with features
+def extract_from_file(file_path, target_dir, cache_dir): #returns a json file with features
     global sr, n_fft
     file_name = change_file_to_wav(file_path, target_dir)
+    cache_path = f'{cache_dir}/{file_name}.json'
     file_path = f'{target_dir}/{file_name}'
-    print(f"wav file: {file_path}")
-    fps = n_fft/sr
 
-    amplitudes = get_amplitudes(file_path)
-    highest_frequencies = get_highest_frequencies(file_path)
-    chords = get_chords(file_path, fps, len(amplitudes))
+    if os.path.isfile(cache_path):
+        return (json.load(open(cache_path)), file_name)
+    else:
+        fps = n_fft/sr
 
-    return ({
-        'sample_rate': fps,
-        'highest_frequency': highest_frequencies,
-        'amplitude': amplitudes,
-        'chord': chords
-    }, file_name)
+        amplitudes = get_amplitudes(file_path)
+        highest_frequencies = get_highest_frequencies(file_path)
+        chords = get_chords(file_path, fps, len(amplitudes))
+
+        json_result = {
+            'sample_rate': fps,
+            'highest_frequency': highest_frequencies,
+            'amplitude': amplitudes,
+            'chord': chords
+        }
+        with open(cache_path, 'w') as json_file:
+            json.dump(json_result, json_file)
+        global app
+        current_app.logger.info(f"Cached file: {cache_path}")
+        return (json_result, file_name)

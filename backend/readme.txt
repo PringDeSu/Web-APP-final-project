@@ -19,6 +19,6 @@ usages:
 	其中，處理完成的聲音檔案可以用 <server_ip>:<server_port>/api/upload/<outputName> 取得
 
 運作細節：
-	- trim_sound.sh: 負責剪檔案，並且將檔名轉為其 sha256sum (為了方便日後進行快取)
-	- feature_extractor.py: 負責音樂的資料擷取，取得音高和弦等等。
+	- trim_sound.sh: 負責剪檔案，並且將檔名轉為其 sha256sum (為了方便日後進行快取)。如果檔案已經存在則跳過
+	- feature_extractor.py: 負責音樂的資料擷取，取得音高和弦等等。如果之前作過該檔案(sha256sum 有出現過) 就跳過
 	- api.py: 負責 flask 的運行以及對外的功能
