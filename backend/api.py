@@ -1,7 +1,7 @@
 #!/bin/python3
 # pip install flask flask_cors
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, abort
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from datetime import datetime
@@ -40,9 +40,18 @@ UPLOAD_FOLDER = args.tmp_folder
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-DOWNLOAD_FOLDER = args.output_folder
-os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
-app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+OUTPUT_FOLDER = args.output_folder
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
+
+@app.route('/api/upload/<path:filename>')
+def serve_file(filename):
+    file_path = os.path.join(OUTPUT_FOLDER, filename)
+    if os.path.isfile(file_path):
+        return send_from_directory(OUTPUT_FOLDER, filename, as_attachment=False)
+    else:
+        abort(404, description="File not found")
+
 
 @app.route('/api/post', methods=['POST'])
 def upload_file():
@@ -67,7 +76,7 @@ def upload_file():
 	app.logger.info(f"Saved in: {file_path}")
 
 	# parsing the file
-	features, stored_path = feature_extractor.extract_from_file(file_path, app.config['DOWNLOAD_FOLDER'])
+	features, stored_name = feature_extractor.extract_from_file(file_path, app.config['OUTPUT_FOLDER'])
 
 	# return the attributes you parsed
 	# modify this part
@@ -75,8 +84,9 @@ def upload_file():
 		'message': 'File uploaded successfully',
 		'fileInfo': {
 			'originalName': file.filename,
-			'convertedPath': stored_path,
-			'originalPath': file_path
+			'originalPath': file_path,
+			'outputPath': f'{OUTPUT_FOLDER}/{stored_name}',
+			'outputName': stored_name,
 		},
 		'features': features
 	})
