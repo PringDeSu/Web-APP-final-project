@@ -21,7 +21,7 @@ def get_amplitudes(file_path):
     global sr, n_fft
     y,_ = librosa.load(file_path, sr = sr)  # 預設會轉成 mono + 22050 Hz
     D = np.array(librosa.stft(y, n_fft=n_fft, hop_length = n_fft))
-    ret = [float(np.sqrt((np.dot(np.abs(D[:, i]), np.abs(D[:, i]))))) for i in range(len(D))]
+    ret = [float(np.sqrt((np.dot(np.abs(D[:, i]), np.abs(D[:, i]))))) for i in range(len(D[0]))]
     return ret
 
 def get_highest_frequencies(file_path):
@@ -29,7 +29,7 @@ def get_highest_frequencies(file_path):
     frequencies = librosa.fft_frequencies(sr=sr, n_fft=n_fft)
     y,_ = librosa.load(file_path, sr = sr)  # 預設會轉成 mono + 22050 Hz
     D = np.array(librosa.stft(y, n_fft=n_fft, hop_length = n_fft))
-    ret = [float(frequencies[np.argmax(D[:, i])]) for i in range(len(D))]
+    ret = [float(frequencies[np.argmax(D[:, i])]) for i in range(len(D[0]))]
     return ret
 
 
@@ -98,6 +98,7 @@ def extract_from_file(file_path, target_dir, cache_dir): #returns a json file wi
         amplitudes = get_amplitudes(file_path)
         highest_frequencies = get_highest_frequencies(file_path)
         chords = get_chords(file_path, fps, len(amplitudes))
+        print(f'amp: {len(amplitudes)}, freq:{len(highest_frequencies)}, chords: {len(chords)}')
 
         json_result = {
             'sample_rate': fps,
