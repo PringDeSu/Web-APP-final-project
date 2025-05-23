@@ -21,4 +21,4 @@ RUN apt-get update && apt-get install -y \
 && flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics \
 && python -m pip install librosa flask flask_cors chord_extractor
 
-CMD ["python api.py --port=$BACKEND_SERVER_PORT"]
+CMD ["bash", "-c", "python api.py --port=$BACKEND_SERVER_PORT"]
