@@ -19,6 +19,6 @@ RUN apt-get update && apt-get install -y \
 && flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics \
 # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
 && flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics \
-&& python -m pip install librosa flask flask_cors chord_extractor
+&& python -m pip install librosa flask flask_cors chord_extractor gunicorn
 
-CMD ["bash", "-c", "python api.py --port=$BACKEND_SERVER_PORT"]
+CMD ["bash", "-c", "gunicorn -w 1 -b 0.0.0.0:$BACKEND_SERVER_PORT api:app"]
