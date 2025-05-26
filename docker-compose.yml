@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./nginx
+    # depends_on:
+    #   - backend
+    ports:
+      - ${USER_INTERFACE_PORT}:${WEB_SERVER_FE_PORT}
+      - ${USER_API_PORT}:${WEB_SERVER_BE_PORT}
+    env_file:
+      - ./.env
+    networks:
+      - webapp
+  #
+  # backend:
+  #   build: ./backend
+  #   env_file:
+  #     - ./.env
+  #   networks:
+  #     - webapp
+  #
+networks:
+  webapp:
+
+
