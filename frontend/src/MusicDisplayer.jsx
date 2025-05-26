@@ -326,9 +326,9 @@ function MusicDisplayer({onGoBack, musicPath, musicMetadata}) {
             progressBar.style.setProperty('--progress-fill-percentage', `${progressPercentage}%`);
         }
     }, [volume, currentTime, duration]); // 依賴於這些狀態，當它們變化時更新 CSS 變量
-    return (
+        return (
         <div className="music-displayer-container">
-            {/* 1. 返回上一頁按鈕 (新的位置和樣式) */}
+            {/* 1. 返回上一頁按鈕 */}
             <button className="back-button-topleft" onClick={onGoBack}>返回上一頁</button>
 
             {/* 主要內容區塊，包含畫布和所有控制項 */}
@@ -336,14 +336,20 @@ function MusicDisplayer({onGoBack, musicPath, musicMetadata}) {
                 {/* 畫布和音量控制區域 (並排) */}
                 <div className="canvas-and-volume-wrapper">
                     {/* 畫布容器，現在可以點擊播放/暫停 */}
-                    <div className="canvas" onClick={togglePlayPause}> {/* MODIFIED: Added onClick */}
+                    <div className="canvas" onClick={togglePlayPause}> {/* 已有 onClick */}
                         <canvas
                             ref={canvasRef}
                             width={WIDTH * CELL_SIZE}
                             height={HEIGHT * CELL_SIZE}
                         />
-                        {/* 這裡可以選擇性地添加一個疊加的播放/暫停圖標 */}
-                        {/* { !isPlaying && <div className="play-overlay-icon">▶</div> } */}
+                        {/* NEW: 畫布上的播放/暫停疊加圖標 */}
+                        {/* 只有在暫停時顯示播放圖標，或者在播放時顯示一個小的暫停圖標 */}
+                        {/* 我們在這裡只顯示播放圖標，模擬 YouTube 暫停狀態 */}
+                        {!isPlaying && (
+                            <div className="canvas-overlay-play-icon">
+                                ▶
+                            </div>
+                        )}
                     </div>
 
                     {/* 垂直音量控制 */}
@@ -356,27 +362,28 @@ function MusicDisplayer({onGoBack, musicPath, musicMetadata}) {
                             step="0.01"
                             value={volume}
                             onChange={handleVolumeChange}
-                            aria-label="音量調整" // 為了可訪問性
+                            aria-label="音量調整"
                         />
                     </div>
                 </div>
 
                 {/* 水平播放控制條 (播放/暫停、進度條、時間) */}
                 <div className="playback-controls-horizontal">
-                    {/* 播放/暫停按鈕 (獨立於畫布點擊事件，提供明確按鈕) */}
-                    <button onClick={togglePlayPause} className="play-pause-main-button">
+                    {/* MODIFIED: 移除播放/暫停按鈕，因為畫布已經處理了 */}
+                    {/* <button onClick={togglePlayPause} className="play-pause-main-button">
                         {isPlaying ? '暫停' : '播放'}
-                    </button>
+                    </button> */}
+
                     {/* 進度條 */}
                     <input
                         type="range"
                         className="progress-bar-main"
                         min="0"
-                        max="100" // 使用百分比更容易處理
+                        max="100"
                         value={duration ? (currentTime / duration) * 100 : 0}
                         onChange={handleSeek}
-                        disabled={isNaN(duration)} // 音頻未載入完成前禁用進度條
-                        aria-label="播放進度" // 為了可訪問性
+                        disabled={isNaN(duration)}
+                        aria-label="播放進度"
                     />
                     {/* 時間顯示 */}
                     <span className="time-display-main">{formatTime(currentTime)} / {formatTime(duration)}</span>
@@ -387,6 +394,7 @@ function MusicDisplayer({onGoBack, musicPath, musicMetadata}) {
             <audio ref={audioRef} style={{ display: 'none' }}></audio>
         </div>
     );
+
 }
 
 export default MusicDisplayer;

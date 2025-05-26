@@ -2,59 +2,58 @@
 
 /* 整體容器 - 包含所有 MusicDisplayer 的內容 */
 .music-displayer-container {
-  position: relative; /* 為了絕對定位的返回按鈕 */
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center; /* 讓內部的主內容區塊水平置中 */
-  justify-content: center; /* 讓內容在垂直方向上置中 (如果空間足夠) */
-  min-height: 100vh; /* 確保至少佔滿整個視窗高度，避免不必要的滾動 */
-  padding: 15px; /* 統一內邊距，為絕對定位的返回按鈕留出空間 */
-  box-sizing: border-box; /* 確保 padding 不會增加元素的總尺寸 */
-  background-color: #f0f2f5; /* 輕微的背景色，讓內容更突出 */
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 15px;
+  box-sizing: border-box;
+  background-color: #f0f2f5;
 }
 
 /* 返回上一頁按鈕 (左上角，扁平風格) */
 .back-button-topleft {
-  position: absolute; /* 絕對定位，不佔用空間 */
-  top: 15px; /* 距離頂部邊緣 */
-  left: 15px; /* 距離左側邊緣 */
-  padding: 8px 12px; /* 調整內邊距，使其更扁平 */
-  font-size: 0.8rem; /* 稍微縮小字體 */
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: #007bff; /* 主題藍色 */
-  background-color: transparent; /* 透明背景，扁平按鈕的特點 */
-  border: 1px solid #007bff; /* 加上一個細邊框，使其不那麼「隱形」 */
-  border-radius: 4px; /* 輕微圓角 */
+  color: #007bff;
+  background-color: transparent;
+  border: 1px solid #007bff;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s ease; /* 平滑過渡效果 */
-  z-index: 10; /* 確保在最上層，蓋過其他內容 */
+  transition: all 0.2s ease;
+  z-index: 10;
 }
 
 .back-button-topleft:hover {
-  background-color: #e6f2ff; /* 淺藍色背景 */
-  color: #0056b3; /* 深藍色文字 */
-  border-color: #0056b3; /* 邊框顏色也變深 */
+  background-color: #e6f2ff;
+  color: #0056b3;
+  border-color: #0056b3;
 }
 
-/* 主要內容區塊的容器 - 包含畫布和所有控制項 */
+/* 主要內容區塊的容器 */
 .main-content-area {
   display: flex;
-  flex-direction: column; /* 畫布+音量區塊在上方，播放控制在下方 */
-  align-items: center; /* 讓內部元素（畫布區塊和播放控制區塊）水平置中 */
-  gap: 20px; /* 畫布區塊與播放控制區塊之間的垂直間距 */
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
   width: 100%;
-  max-width: 700px; /* 控制整個主要內容區塊的最大寬度，使其不會過寬 */
-  /* margin-top 可以在 responsive 中調整，確保與上方返回按鈕有足夠間距 */
+  max-width: 700px;
 }
 
 /* 畫布與音量控制的並排容器 */
 .canvas-and-volume-wrapper {
   display: flex;
-  align-items: center; /* 垂直置中畫布和音量條 */
-  justify-content: center; /* 水平置中畫布和音量條組合 */
-  gap: 20px; /* 畫布與音量條之間的間距 */
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
   width: 100%;
-  max-width: 600px; /* 控制這一排的最大寬度 */
+  max-width: 600px;
 }
 
 /* 畫布容器 */
@@ -62,76 +61,97 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 0; /* 不讓畫布伸展，使用固定的最大寬度 */
-  flex-shrink: 1; /* 允許縮小 */
-  max-width: 400px; /* 縮小畫布尺寸，確保整體佈局在一頁內可見 */
-  width: 90%; /* 在 `max-width` 限制下，佔據可用寬度 */
-  aspect-ratio: 1 / 1; /* 保持正方形比例 */
-  background-color: #000000; /* 黑色背景 */
-  padding: 8px; /* 內邊距，讓畫布邊框可見 */
+  flex-grow: 0;
+  flex-shrink: 1;
+  max-width: 400px;
+  width: 90%;
+  aspect-ratio: 1 / 1;
+  background-color: #000000;
+  padding: 8px;
   box-sizing: border-box;
   border-radius: 4px;
-  cursor: pointer; /* 指示畫布可點擊 */
-  position: relative; /* 用於可能的疊加效果，如播放圖標 */
-  overflow: hidden; /* 確保像素不會溢出圓角邊框 */
-  transition: transform 0.1s ease; /* 點擊時的輕微縮放動畫 */
+  cursor: pointer;
+  position: relative; /* 確保疊加圖標可以相對於畫布定位 */
+  overflow: hidden;
+  transition: transform 0.1s ease;
 }
 
 .canvas:active {
-  transform: scale(0.99); /* 點擊時輕微縮小 */
+  transform: scale(0.99);
 }
 
-.canvas canvas { /* 針對 canvas 元素本身 */
+.canvas canvas {
   display: block;
-  border: 1px solid #333333; /* 畫布邊框 */
-  image-rendering: pixelated; /* 像素化效果 (推薦) */
-  image-rendering: -moz-crisp-edges; /* Firefox 兼容 */
-  image-rendering: crisp-edges; /* 其他瀏覽器兼容 */
+  border: 1px solid #333333;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* 確保內容按比例縮放並在容器內 */
+  object-fit: contain;
 }
+
+/* NEW: 畫布上的播放疊加圖標樣式 */
+.canvas-overlay-play-icon {
+  position: absolute; /* 相對於 .canvas 進行絕對定位 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 精確居中 */
+  font-size: 4rem; /* 大小的播放圖標 */
+  color: rgba(255, 255, 255, 0.8); /* 半透明白色 */
+  background-color: rgba(0, 0, 0, 0.4); /* 半透明黑色背景 */
+  border-radius: 50%; /* 圓形背景 */
+  width: 80px; /* 圖標背景大小 */
+  height: 80px;
+  display: flex; /* 內部內容（▶）居中 */
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; /* 讓點擊穿透到下面的畫布元素 */
+  transition: opacity 0.2s ease;
+}
+
+/* Hover over canvas to make play icon slightly more visible */
+.canvas:hover .canvas-overlay-play-icon {
+  opacity: 0.9;
+}
+
 
 /* 垂直音量控制容器 */
 .volume-control-vertical {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px; /* 根據畫布的高度調整，使其視覺上對齊 */
+  height: 200px;
   padding: 0 10px;
 }
 
 /* 垂直音量滑塊的自定義樣式 */
 .volume-control-vertical .volume-slider {
-  appearance: slider-vertical; /* 使滑塊垂直顯示 */
-  -webkit-appearance: slider-vertical; /* 兼容 Safari */
-  width: 25px; /* 滑塊軌道的寬度 */
-  height: 100%; /* 佔滿父容器高度 */
+  appearance: slider-vertical;
+  -webkit-appearance: slider-vertical;
+  width: 25px;
+  height: 100%;
   cursor: pointer;
 
-  /* 自定義滑塊軌道和滑塊頭 */
   &::-webkit-slider-runnable-track {
-    /* MODIFIED: 使用線性漸變實現藍色填充 */
     background: linear-gradient(to top, #007bff 0%, #007bff var(--volume-fill-percentage), #ccc var(--volume-fill-percentage), #ccc 100%);
-    background-size: 100% 100%; /* 確保背景圖案完全覆蓋軌道 */
+    background-size: 100% 100%;
     background-repeat: no-repeat;
     border-radius: 2px;
-    height: 4px; /* 軌道粗細 */
+    height: 4px;
   }
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    background-color: #007bff; /* 滑塊頭顏色 */
+    background-color: #007bff;
     border: none;
     border-radius: 50%;
-    width: 16px; /* 滑塊頭大小 */
+    width: 16px;
     height: 16px;
-    margin-top: -6px; /* 調整滑塊頭在垂直軌道上的位置 */
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3); /* 輕微的光暈效果 */
+    margin-top: -6px;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
   }
 
-  /* Firefox 兼容性樣式 */
   &::-moz-range-track {
-    /* MODIFIED: 使用線性漸變實現藍色填充 */
     background: linear-gradient(to top, #007bff 0%, #007bff var(--volume-fill-percentage), #ccc var(--volume-fill-percentage), #ccc 100%);
     border-radius: 2px;
     height: 4px;
@@ -145,48 +165,33 @@
   }
 }
 
-/* 水平播放控制條 (播放/暫停按鈕、進度條、時間顯示) */
+/* 水平播放控制條 (播放/暫停、進度條、時間顯示) */
 .playback-controls-horizontal {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 元素之間分散對齊，使進度條居中 */
-  gap: 15px; /* 元素間距 */
+  /* MODIFIED: 由於移除了播放按鈕，調整對齊方式 */
+  justify-content: center; /* 讓進度條和時間顯示居中 */
+  gap: 15px;
   width: 100%;
-  max-width: 550px; /* 控制整個播放控制條的最大寬度，使其與畫布+音量組合視覺上對齊 */
-  padding: 12px 15px; /* 內邊距 */
-  background-color: #f8f9fa; /* 背景色 */
+  max-width: 550px;
+  padding: 12px 15px;
+  background-color: #f8f9fa;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* 輕微陰影 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-/* 播放/暫停按鈕 */
-.playback-controls-horizontal .play-pause-main-button {
-  padding: 10px 18px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: white;
-  background-color: #28a745; /* 綠色按鈕 */
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  min-width: 90px;
-  text-align: center;
-}
+/* MODIFIED: 由於播放按鈕已移除，這些樣式不再直接適用 */
+/* .playback-controls-horizontal .play-pause-main-button { ... } */
+/* .playback-controls-horizontal .play-pause-main-button:hover { ... } */
 
-.playback-controls-horizontal .play-pause-main-button:hover {
-  background-color: #1e7e34; /* 懸停時顏色變深 */
-}
 
 /* 進度條 */
 .playback-controls-horizontal .progress-bar-main {
   flex-grow: 1; /* 進度條佔據剩餘空間 */
   height: 8px;
-  /* 自定義進度條的樣式，與音量滑塊類似 */
   &::-webkit-slider-runnable-track {
-    /* MODIFIED: 使用線性漸變實現藍色填充 */
     background: linear-gradient(to right, #007bff 0%, #007bff var(--progress-fill-percentage), #ccc var(--progress-fill-percentage), #ccc 100%);
-    background-size: 100% 100%; /* 確保背景圖案完全覆蓋軌道 */
+    background-size: 100% 100%;
     background-repeat: no-repeat;
     border-radius: 2px;
     height: 4px;
@@ -198,11 +203,10 @@
     border-radius: 50%;
     width: 16px;
     height: 16px;
-    margin-top: -6px; /* 調整滑塊頭位置 */
+    margin-top: -6px;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
   }
   &::-moz-range-track {
-    /* MODIFIED: 使用線性漸變實現藍色填充 */
     background: linear-gradient(to right, #007bff 0%, #007bff var(--progress-fill-percentage), #ccc var(--progress-fill-percentage), #ccc 100%);
     border-radius: 2px;
     height: 4px;
@@ -220,9 +224,9 @@
 .playback-controls-horizontal .time-display-main {
   font-size: 0.9rem;
   color: #444;
-  min-width: 90px; /* 防止時間數字跳動導致佈局變化 */
+  min-width: 90px;
   text-align: center;
-  white-space: nowrap; /* 防止時間顯示換行 */
+  white-space: nowrap;
 }
 
 /* 隱藏 HTML5 audio 標籤的預設控制項 */
@@ -230,49 +234,56 @@
   display: none;
 }
 
-/* 響應式調整 - 當螢幕寬度小於 650px 時 */
+/* 響應式調整 */
 @media (max-width: 650px) {
   .music-displayer-container {
-    padding: 10px; /* 為了更小的螢幕使用更小的邊距 */
+    padding: 10px;
   }
 
   .back-button-topleft {
     top: 10px;
     left: 10px;
     padding: 6px 10px;
-    font-size: 0.75rem; /* 在小螢幕上稍微縮小字體 */
+    font-size: 0.75rem;
   }
 
   .main-content-area {
-    margin-top: 20px; /* 確保主內容與返回按鈕有足夠間距 */
-    gap: 15px; /* 縮小垂直間距 */
+    margin-top: 20px;
+    gap: 15px;
   }
 
   .canvas-and-volume-wrapper {
-    flex-direction: column; /* 將畫布和音量控制改為垂直堆疊 */
-    gap: 15px; /* 縮小間距 */
+    flex-direction: column;
+    gap: 15px;
   }
 
   .canvas {
-    max-width: 90%; /* 畫布在堆疊時可以佔據更寬的空間 */
+    max-width: 90%;
     min-width: 250px;
-    width: 100%; /* 確保畫布在堆疊時佔滿可用寬度 */
+    width: 100%;
+  }
+
+  /* 疊加圖標在小螢幕上可能需要調整大小 */
+  .canvas-overlay-play-icon {
+    font-size: 3rem;
+    width: 60px;
+    height: 60px;
   }
 
   .volume-control-vertical {
-    height: auto; /* 重置高度，因為它將變為水平滑塊 */
-    width: 80%; /* 調整寬度以適應水平滑塊 */
-    min-height: auto; /* 重置最小高度 */
+    height: auto;
+    width: 80%;
+    min-height: auto;
   }
 
   .volume-control-vertical .volume-slider {
-    appearance: auto; /* 將滑塊重置為預設的水平外觀 */
+    appearance: auto;
     -webkit-appearance: auto;
-    width: 100%; /* 佔滿父容器寬度 */
-    height: 20px; /* 標準水平滑塊高度 */
+    width: 100%;
+    height: 20px;
   }
 
-  /* MODIFIED FOR RESPONSIVE: Resetting background for horizontal mode */
+  /* 響應式模式下，音量滑塊的背景方向也要變回水平 */
   .volume-control-vertical .volume-slider::-webkit-slider-runnable-track {
     background: linear-gradient(to right, #007bff 0%, #007bff var(--volume-fill-percentage), #ccc var(--volume-fill-percentage), #ccc 100%);
     background-size: 100% 100%;
@@ -283,19 +294,13 @@
 
 
   .playback-controls-horizontal {
-    flex-direction: column; /* 將播放控制條的元素改為垂直堆疊 (如果螢幕非常窄) */
+    flex-direction: column; /* 將播放控制條的元素改為垂直堆疊 */
     gap: 10px;
     padding: 15px;
     max-width: 90%;
   }
-  .playback-controls-horizontal .play-pause-main-button {
-    width: 100%; /* 播放按鈕佔滿寬度 */
-    min-width: unset;
-  }
-  .playback-controls-horizontal .progress-bar-main {
-    width: 100%; /* 進度條佔滿寬度 */
-  }
-  .playback-controls-horizontal .time-display-main {
-    width: 100%; /* 時間顯示佔滿寬度 */
-  }
+  /* 由於播放按鈕已移除，這些樣式不再直接適用，但保留空白 */
+  /* .playback-controls-horizontal .play-pause-main-button { ... } */
+  /* .playback-controls-horizontal .progress-bar-main { ... } */
+  /* .playback-controls-horizontal .time-display-main { ... } */
 }
