@@ -1,0 +1,40 @@
+/* src/App.css */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 至少填滿整個視窗高度 */
+  text-align: center;
+}
+
+.app-header {
+  background-color: #282c34; /* 深色背景 */
+  padding: 20px 0;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.app-main {
+  flex-grow: 1; /* 讓主要內容區域填滿剩餘空間 */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 在頁面較少時可以居中 */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.app-footer {
+  background-color: #f8f9fa; /* 淺灰色頁腳 */
+  padding: 15px 0;
+  color: #6c757d; /* 頁腳文字顏色 */
+  font-size: 0.9rem;
+  border-top: 1px solid #dee2e6; /* 頁腳頂部邊線 */
+}
