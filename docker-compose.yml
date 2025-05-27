@@ -6,10 +6,11 @@ services:
     depends_on:
       - backend
     ports:
-      - ${USER_INTERFACE_PORT}:${WEB_SERVER_FE_PORT}
-      - ${USER_API_PORT}:${WEB_SERVER_BE_PORT}
+      - ${USER_INTERFACE_PORT}:${WEB_SERVER_PORT}
     env_file:
       - ./.env
+    environment:
+      - SERVER_IP_ADDRESS=${SERVER_IP_ADDRESS}
     networks:
       - webapp
 
@@ -17,6 +18,8 @@ services:
     build: ./backend
     env_file:
       - ./.env
+    environment:
+      - SERVER_IP_ADDRESS=${SERVER_IP_ADDRESS}
     networks:
       - webapp
 
