@@ -60,7 +60,7 @@ function MusicUpload({onChangePage, onResponse}) {
 
   return (
     <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">MP3 文件上傳</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">請選擇音樂</h1>
       
       <div className="mb-4">
         <input

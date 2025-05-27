@@ -29,7 +29,7 @@ function App() {
                 />}
             </main>
             <footer className="app-footer"> {/* 頁腳 (可選) */}
-                <p>© {new Date().getFullYear()} 你的名字或團隊名稱</p>
+                <p>© {new Date().getFullYear()}Web APP 開發 第四組</p>
             </footer>
         </div>
     );
