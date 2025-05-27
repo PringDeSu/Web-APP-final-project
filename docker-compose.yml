@@ -11,6 +11,8 @@ services:
       - ./.env
     environment:
       - SERVER_IP_ADDRESS=${SERVER_IP_ADDRESS}
+    volumes:
+      - web_log:/var/log/nginx
     networks:
       - webapp
 
@@ -20,10 +22,16 @@ services:
       - ./.env
     environment:
       - SERVER_IP_ADDRESS=${SERVER_IP_ADDRESS}
+      - LOG_FOLDER=${BACKEND_SERVER_LOG_PATH}
     networks:
       - webapp
+    volumes:
+      - backend_log:${BACKEND_SERVER_LOG_PATH}
 
 networks:
   webapp:
 
+volumes:
+  web_log:
+  backend_log:
 
