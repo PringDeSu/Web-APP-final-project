@@ -1,0 +1,19 @@
+noraml 資料夾為一些常見音樂測試
+
+- 無版權音樂 by Kevin MacLeod（以下測試音檔可在 https://incompetech.com/music/royalty-free/music.html 下載）
+    - Carefree.mp3: 正常
+    - Cryptic Sorrow.mp3: 正常，有被裁剪成 300s
+    - Epic Unease.mp3: 正常
+    - Five Armies.mp3: 正常
+    - Ghost Story.mp3: 正常，有被裁剪成 300s
+    - Heroic Age.mp3: 正常
+    - Investigations.mp3: 正常
+    - Long Note Four.mp3: 正常，有被裁剪成 300s
+    - Monkeys Spinning Monkeys.mp3: 正常
+    - Rites.mp3: 正常
+    - Scheming Weasel faster.mp3: 正常
+    - Sneaky Snitch.mp3: 正常
+
+- 人聲: 錄 QA 的聲音測試
+    - vocal.mp3: 正常
+    - vocal2.mp3: 正常

@@ -1,0 +1,5 @@
+heuristic 資料夾為測試一些 edge case
+
+- with_tags.mp3: 有完整 id3 tags，正常
+- no_tags.mp3: 沒有 id3 tags，正常
+- special_tags.mp3: id3 tags 有其它語言，正常
