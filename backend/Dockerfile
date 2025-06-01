@@ -10,7 +10,7 @@ COPY feature_extractor.py .
 COPY trim_sound.sh .
 
 RUN apt-get update && apt-get install -y \
-    "g++" libsndfile1 timidity ffmpeg \
+    "g++" libsndfile1 timidity ffmpeg file\
 && rm -rf /var/lib/apt/lists/* \
 && python -m pip install --upgrade pip \
 && python -m pip install flake8 pytest wheel numpy==1.19.2\
