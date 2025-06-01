@@ -1,7 +1,7 @@
 #!/bin/python3
 # pip install flask flask_cors
 import os
-from flask import Flask, request, jsonify, send_from_directory, abort
+from flask import Flask, request, jsonify, send_from_directory, abort, Response
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from datetime import datetime
@@ -70,6 +70,9 @@ def upload_file():
 
     # parsing the file
     returncode, features, stored_name = feature_extractor.extract_from_file(file_path, app.config['OUTPUT_FOLDER'], app.config['CACHE_FOLDER'])
+
+    if returncode == False:
+        return Response("not MP3 WTF you DOING???", status=400)
 
     # return the attributes you parsed
     # modify this part
