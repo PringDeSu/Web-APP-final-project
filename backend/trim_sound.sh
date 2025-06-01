@@ -1,5 +1,12 @@
 #!/bin/bash
 input_file="$1"
+
+file_type=$(file $input_file | grep "Audio")
+if [[ "$file_type" = "" ]]; then
+	echo "type error!"
+	exit 1
+fi
+
 S=$(sha256sum "$input_file" | awk '{print $1}')
 output_dir="$2"
 output_name="$S.wav"

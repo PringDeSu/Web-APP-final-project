@@ -81,12 +81,13 @@ def upload_file():
 	app.logger.info(f"Saved in: {file_path}")
 
 	# parsing the file
-	features, stored_name = feature_extractor.extract_from_file(file_path, app.config['OUTPUT_FOLDER'], app.config['CACHE_FOLDER'])
+	returncode, features, stored_name = feature_extractor.extract_from_file(file_path, app.config['OUTPUT_FOLDER'], app.config['CACHE_FOLDER'])
 
 	# return the attributes you parsed
 	# modify this part
 	return jsonify({
 		'message': 'File uploaded successfully',
+        'return code': f'{returncode}',
 		'fileInfo': {
 			'originalName': file.filename,
 			'originalPath': file_path,
