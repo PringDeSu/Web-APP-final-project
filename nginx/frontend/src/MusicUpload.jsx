@@ -9,7 +9,7 @@ function MusicUpload({onChangePage, onResponse}) {
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
         // console.log('Selected file:', selectedFile);
-        if (selectedFile && (selectedFile.type === 'audio/mp3')) {
+        if (selectedFile && (selectedFile.type === 'audio/mpeg' || selectedFile.type === 'audio/mp3')) {
             setFile(selectedFile);
             setUploadStatus('');
         } else {
@@ -66,7 +66,7 @@ function MusicUpload({onChangePage, onResponse}) {
       <div className="mb-4">
         <input
           type="file"
-          accept="audio/mp3"
+          accept="audio/mpeg,audio/mp3"
           onChange={handleFileChange}
           className="block w-full text-sm text-gray-500
             file:mr-4 file:py-2 file:px-4
