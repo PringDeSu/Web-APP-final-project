@@ -68,24 +68,22 @@ def upload_file():
     app.logger.info(f"Stored as: {unique_filename}")
     app.logger.info(f"Saved in: {file_path}")
 
-    # parsing the file
-    features, stored_name = feature_extractor.extract_from_file(file_path, app.config['OUTPUT_FOLDER'], app.config['CACHE_FOLDER'])
+	# parsing the file
+	returncode, features, stored_name = feature_extractor.extract_from_file(file_path, app.config['OUTPUT_FOLDER'], app.config['CACHE_FOLDER'])
 
-    # return the attributes you parsed
-    # modify this part
-    output_path = app.config['OUTPUT_FOLDER']+f'/{stored_name}'
-    api_path = f'/api/upload/{stored_name}'
-    return jsonify({
-        'message': 'File uploaded successfully',
-        'fileInfo': {
-            'originalName': file.filename,
-            'originalPath': file_path,
-            'outputPath': output_path,
-            'outputName': stored_name,
-            'apiPath'   : api_path,
-        },
-        'features': features
-    })
+	# return the attributes you parsed
+	# modify this part
+	return jsonify({
+		'message': 'File uploaded successfully',
+        'return code': f'{returncode}',
+		'fileInfo': {
+			'originalName': file.filename,
+			'originalPath': file_path,
+			'outputPath': f'{OUTPUT_FOLDER}/{stored_name}',
+			'outputName': stored_name,
+		},
+		'features': features
+	})
 
 if __name__ == '__main__':
 

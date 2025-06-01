@@ -14,8 +14,12 @@ sr = 22050
 frame_time = n_fft/sr
 
 def change_file_to_wav(file_path, target_dir):
-    result = subprocess.check_output(['./trim_sound.sh', f"{file_path}", f"{target_dir}"], text=True)
-    return str(result).replace('\n', '').replace('\r', '')
+    proc = subprocess.run(['./trim_sound.sh', f"{file_path}",f"{target_dir}"], capture_output=True, text=True)
+    print(f'return code = {proc.returncode}')
+    if proc.returncode != 0:
+        return (False, "")
+    else:
+        return (True,str(proc.stdout).replace('\n', '').replace('\r', ''))
 
 def get_amplitudes(file_path):
     global sr, n_fft
@@ -86,12 +90,14 @@ def get_chords(file_path, fps, sz):
 
 def extract_from_file(file_path, target_dir, cache_dir): #returns a json file with features
     global sr, n_fft
-    file_name = change_file_to_wav(file_path, target_dir)
+    file_status, file_name = change_file_to_wav(file_path, target_dir)
+    if file_status == False:
+        return (False, {}, file_name)
     cache_path = f'{cache_dir}/{file_name}.json'
     file_path = f'{target_dir}/{file_name}'
 
     if os.path.isfile(cache_path):
-        return (json.load(open(cache_path)), file_name)
+        return (True, json.load(open(cache_path)), file_name)
     else:
         fps = n_fft/sr
 
@@ -101,6 +107,7 @@ def extract_from_file(file_path, target_dir, cache_dir): #returns a json file wi
         print(f'amp: {len(amplitudes)}, freq:{len(highest_frequencies)}, chords: {len(chords)}')
 
         json_result = {
+            'status': True,
             'sample_rate': fps,
             'highest_frequency': highest_frequencies,
             'amplitude': amplitudes,
@@ -110,4 +117,4 @@ def extract_from_file(file_path, target_dir, cache_dir): #returns a json file wi
             json.dump(json_result, json_file)
         global app
         current_app.logger.info(f"Cached file: {cache_path}")
-        return (json_result, file_name)
+        return (True, json_result, file_name)
