@@ -31,7 +31,7 @@ function MusicUpload({onChangePage, onResponse}) {
 
         try {
             console.log(`${import.meta.env.VITE_SERVER_LOCATION}`)
-            const response = await fetch(`http://${import.meta.env.VITE_SERVER_LOCATION}/api/post`, {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_LOCATION}:${import.meta.env.VITE_SERVER_PORT}/api/post`, {
                 method: 'POST',
                 body: formData,
             });
@@ -42,7 +42,7 @@ function MusicUpload({onChangePage, onResponse}) {
                 // console.log(response);
                 response.json().then((data) => {
                     // console.log(data);
-                    onResponse(`http://${import.meta.env.VITE_SERVER_LOCATION}/api/upload/${data.fileInfo.outputName}`, data);
+                    onResponse(`http://${import.meta.env.VITE_SERVER_LOCATION}:${import.meta.env.VITE_SERVER_PORT}/api/upload/${data.fileInfo.outputName}`, data);
                     onChangePage();
                 });
 
